@@ -1,62 +1,36 @@
-import { AuthProvider } from "@/stores/AuthContext";
-import { Search } from "@/components/index";
+import { useEffect } from "react";
 
-import "./App.css";
+import { AuthProvider } from "@/stores/AuthContext";
+import { CharacterCard, Search } from "@/components/index";
+import { CharacterInfo } from "@/types/characters";
+import { getLocalStorage } from "@/utils/localStorage";
+import { useCharacters } from "@/stores/index";
 
 function App() {
-  // async function fetchSpell(id: number) {
-  //   try {
-  //     const apiUrl = `https://us.api.blizzard.com/data/wow/spell/${id}`;
-  //     const response = await axios.get(apiUrl, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`, // Añadir el token en la cabecera
-  //       },
-  //       params: {
-  //         namespace: "static-us",
-  //         locale: "es_ES", // Cambiar a 'es_MX' si deseas español
-  //       },
-  //     });
+  const { characters, setCharacters } = useCharacters();
 
-  //     console.log(response.data); // Mostrar los datos del hechizo
-  //   } catch (error) {
-  //     console.error(`Error al obtener el hechizo: ${error}`);
-  //   }
-  // }
+  useEffect(() => {
+    const storedCharacters: CharacterInfo[] = getLocalStorage<CharacterInfo[]>(
+      "characters",
+      []
+    );
 
-  // const getCharacterAppearance = async (name: string) => {
-  //   const url: string = `https://eu.api.blizzard.com/profile/wow/character/colinas-pardas/${name}/character-media?namespace=profile-eu&locale=es_ES`;
-
-  //   try {
-  //     const response = await axios.get(url, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`, // Añadir el token en la cabecera
-  //       },
-  //       params: {
-  //         namespace: "static-us",
-  //         locale: "es_ES", // Cambiar a 'es_MX' si deseas español
-  //       },
-  //     });
-
-  //     console.log(response.data); // Mostrar los datos del hechizo
-  //     setCharacter(response.data);
-  //   } catch (error) {
-  //     console.error(`Error al obtener apariencia: ${error}`);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getAccessToken();
-
-  //   if (token) {
-  //     fetchSpell(133);
-  //     getCharacterAppearance("morvinhood");
-  //   }
-  // }, [token]);
+    setCharacters(storedCharacters);
+  }, []);
 
   return (
     <AuthProvider>
-      <main>
+      <main className="container mx-auto py-8 px-4 min-h-screen flex flex-col gap-6">
         <Search />
+
+        <section className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 auto-rows-max gap-4 flex-1">
+          {characters.map((characterInfo) => (
+            <CharacterCard
+              key={characterInfo.character.id}
+              characterInfo={characterInfo}
+            />
+          ))}
+        </section>
       </main>
     </AuthProvider>
   );

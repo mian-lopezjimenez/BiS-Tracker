@@ -12,10 +12,14 @@
   "dependencies": {
     "@iconify/react": "^5.0.2",
     "axios": "^1.7.7",
+    "i18next": "^23.15.1",
+    "i18next-browser-languagedetector": "^8.0.0",
+    "i18next-http-backend": "^2.6.1",
     "qs": "^6.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
+    "react-i18next": "^15.0.2",
     "vite-tsconfig-paths": "^5.0.1",
     "zustand": "^5.0.0-rc.2"
   },

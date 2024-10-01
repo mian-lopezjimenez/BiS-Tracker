@@ -1,0 +1,11 @@
+{
+  "languageSelector": {
+    "english": "English",
+    "spanish": "Español"
+  },
+  "search": {
+    "name": "Nombre del personaje",
+    "realm": "Reino",
+    "send": "Enviar"
+  }
+}

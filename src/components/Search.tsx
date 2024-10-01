@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useAuth } from "@/hooks/index";
 import { useCharacters } from "@/stores/index";
@@ -18,6 +19,7 @@ const Search = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
+  const { t } = useTranslation();
   const { token } = useAuth();
   const { characters, setCharacters } = useCharacters();
 
@@ -71,20 +73,21 @@ const Search = () => {
       <input
         type="text"
         className="p-2"
-        placeholder="Character Name"
+        placeholder={t("search.name")}
         {...register("name", { required: true })}
       />
 
       <input
         type="text"
         className="p-2"
-        placeholder="Realm"
+        placeholder={t("search.realm")}
         {...register("realmSlug", { required: true })}
       />
 
       <input
         className="p-2 bg-teal-500 rounded-full w-20 text-white hover:bg-teal-600 transition-colors duration-300 cursor-pointer"
         type="submit"
+        value={t("search.send")}
       />
     </form>
   );

@@ -1,26 +1,15 @@
 import { memo } from "react";
 
+import { capitalizeAll } from "@/utils/strings";
 import useCharacterInfo from "../hooks/useCharacterInfo";
-import useCharacters from "@/stores/characters";
-import { setLocalStorage } from "@/utils/localStorage";
 
 const CharacterTitle = memo(() => {
   const { characterInfo } = useCharacterInfo();
-  const { characters, deleteCharacter } = useCharacters();
-  const { name, realm, id } = characterInfo.character;
-
-  const handleDeleteCharacter = (id: number) => {
-    deleteCharacter(id);
-    setLocalStorage(
-      "characters",
-      characters.filter((c) => c.character.id !== id)
-    );
-  };
+  const { name, realm } = characterInfo.character;
 
   return (
     <h2 className="text-center">
-      {name} - {realm.name} -
-      <button onClick={() => handleDeleteCharacter(id)}>X</button>
+      {name} - {capitalizeAll(realm.slug.split("-").join(" "))}
     </h2>
   );
 });

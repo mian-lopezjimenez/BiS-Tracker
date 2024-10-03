@@ -7,7 +7,7 @@ import { getLocalStorage } from "@/utils/localStorage";
 import { useCharacters } from "@/stores/index";
 
 function App() {
-  const { characters, setCharacters } = useCharacters();
+  const { characters, setCharacters, setHasToUpdate } = useCharacters();
 
   useEffect(() => {
     const storedCharacters: CharacterInfo[] = getLocalStorage<CharacterInfo[]>(
@@ -16,6 +16,7 @@ function App() {
     );
 
     setCharacters(storedCharacters);
+    setHasToUpdate();
   }, []);
 
   return (
@@ -29,7 +30,7 @@ function App() {
         <section className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 auto-rows-max gap-4 flex-1">
           {characters.map((characterInfo) => (
             <CharacterCard
-              key={characterInfo.character.id}
+              key={characterInfo?.character?.id ?? ""}
               characterInfo={characterInfo}
             />
           ))}

@@ -22,4 +22,6 @@ const right: string[] = [
 
 const hands: string[] = ["MAIN_HAND", "OFF_HAND"];
 
-export { left, right, hands };
+const languages: string[] = ["de", "en", "es", "fr", "it", "pt", "ru"];
+
+export { left, right, hands, languages };

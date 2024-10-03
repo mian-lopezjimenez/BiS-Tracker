@@ -5,6 +5,9 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/index";
 import { useCharacters } from "@/stores/index";
 import { setLocalStorage } from "@/utils/localStorage";
+import { CharacterInfo, Region } from "@/types/characters";
+import { getCharacter } from "@/utils/api";
+import { ChangeEvent } from "react";
 
 interface Inputs {
   name: string;
@@ -19,9 +22,9 @@ const Search = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { token } = useAuth();
-  const { characters, setCharacters } = useCharacters();
+  const { characters, setCharacters, setRegion } = useCharacters();
 
   const onSubmit: SubmitHandler<Inputs> = async (values) => {
     const { region, name, realmSlug } = values;
@@ -40,24 +43,27 @@ const Search = () => {
     }
 
     try {
-      const url: string = `https://${region}.api.blizzard.com/profile/wow/character/${realmSlug
-        .replace(/ /g, "-")
-        .toLowerCase()}/${name.toLowerCase()}/equipment?namespace=profile-${region}&locale=es_ES`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          namespace: "static-us",
-          locale: "es_ES",
-        },
+      const character: CharacterInfo | null = await getCharacter({
+        language: i18n.language,
+        name,
+        realmSlug,
+        region,
+        token,
       });
 
-      setCharacters([...characters, response.data]);
-      setLocalStorage("characters", [...characters, response.data]);
+      if (character) {
+        setCharacters([...characters, character]);
+        setLocalStorage("characters", [...characters, character]);
+      }
     } catch (error) {
-      console.error(`Error al obtener apariencia: ${error}`);
+      console.error(`Error getting the character: ${error}`);
     }
+  };
+
+  const handleRegionChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+
+    setRegion(value as Region);
   };
 
   return (
@@ -65,7 +71,10 @@ const Search = () => {
       className="flex flex-wrap justify-between rounded-lg p-4 border-solid border-2 border-blue-300"
       onSubmit={handleSubmit(onSubmit)}
     >
-      <select {...register("region", { required: true })}>
+      <select
+        {...register("region", { required: true })}
+        onChange={handleRegionChange}
+      >
         <option value="eu">EU</option>
         <option value="us">US</option>
       </select>

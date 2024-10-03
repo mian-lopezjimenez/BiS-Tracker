@@ -390,3 +390,8 @@ export interface Effect2 {
   required_count: number;
   is_active?: boolean;
 }
+
+export enum Region {
+  EU = "eu",
+  US = "us",
+}

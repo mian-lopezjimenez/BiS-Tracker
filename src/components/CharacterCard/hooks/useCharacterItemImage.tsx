@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import { EquippedItem } from "@/types/characters";
 import { getLocalStorage, setLocalStorage } from "@/utils/localStorage";
@@ -17,15 +18,12 @@ interface Props {
 
 const useCharacterItemImage = ({ equippedItem }: Props) => {
   const [media, setMedia] = useState("");
+  const { i18n } = useTranslation();
   const { token } = useAuth();
   const { id } = equippedItem?.item ?? { id: "" };
   const { key } = equippedItem?.media ?? {
     key: { href: "" },
   };
-  const itemsUrlsImages: ItemImageURL[] = getLocalStorage(
-    "items-urls-images",
-    []
-  );
 
   const getItemMedia = async (url: string) => {
     try {
@@ -35,9 +33,14 @@ const useCharacterItemImage = ({ equippedItem }: Props) => {
         },
         params: {
           namespace: "static-eu",
-          locale: "es_ES",
+          locale: i18n.language,
         },
       });
+
+      const itemsUrlsImages: ItemImageURL[] = getLocalStorage(
+        "items-urls-images",
+        []
+      );
 
       setLocalStorage("items-urls-images", [
         ...itemsUrlsImages,
@@ -53,6 +56,11 @@ const useCharacterItemImage = ({ equippedItem }: Props) => {
   };
 
   useEffect(() => {
+    const itemsUrlsImages: ItemImageURL[] = getLocalStorage(
+      "items-urls-images",
+      []
+    );
+
     const foundItemUrlImage = itemsUrlsImages.find((i) => i.id === id);
 
     if (foundItemUrlImage) {

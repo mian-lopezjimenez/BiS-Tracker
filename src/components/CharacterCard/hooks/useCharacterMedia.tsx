@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 
 import { CharacterInfo, CharacterMedia, Realm } from "@/types/characters";
@@ -10,6 +11,7 @@ const useCharacterMedia = (characterInfo: CharacterInfo) => {
   const [characterMedia, setCharacterMedia] = useState<CharacterMedia>(
     {} as CharacterMedia
   );
+  const { i18n } = useTranslation();
   const { character } = characterInfo;
   const { name, realm, id } = character;
   const { token } = useAuth();
@@ -30,7 +32,7 @@ const useCharacterMedia = (characterInfo: CharacterInfo) => {
           },
           params: {
             namespace: "profile-eu",
-            locale: "es_ES",
+            locale: i18n.language,
           },
         }
       );
